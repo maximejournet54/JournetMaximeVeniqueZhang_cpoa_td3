@@ -4,42 +4,87 @@ import connexion.ConnexionMYSQL;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 
 public class Commande {
-    int id_commande,id_client;
-    LocalDate date_commande;
+    private int id_commande,id_client;
+    private Date date_commande;
 	public Commande(int id_commande, String date_commande, int id_client) {
-        this.id_commande = id_commande;
-        DateTimeFormatter formatage = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dateDebut = LocalDate.parse(date_commande, formatage);
-        this.date_commande = dateDebut;
-		this.id_client = id_client;		
-    }
+		this.setId(id_commande);
+		this.setDate_commande2(date_commande);
+		this.setId_client(id_client);
+	}
+	
+	public Commande(int id_commande,Date date_commande,int id_client) {
+		this.setId(id_commande);
+		this.setDate_commande1(date_commande);
+		this.setId_client(id_client);
+	}
 
     public Commande(int id_commande) {
 		this.id_commande=id_commande;
+	}
+    
+    public Commande(int id_commande,LocalDate date_commande,int id_client) {
+		this.setId(id_commande);
+		this.setDate_commande3(date_commande);
+		this.setId_client(id_client);
+	}
+    
+    //getters et setters
+    
+    public int getId() {
+		return id_commande;
 	}
 
 	public void setId(int id_commande) {
         this.id_commande = id_commande;
 	}
-
-	public int getId() {
-		return id_commande;
+	
+	public int getId_client() {
+		return id_client;
 	}
+
+	public void setId_client(int id_client) {
+		this.id_client = id_client;
+	}
+	
+	public Date getDate_commande() {
+		return date_commande;
+	}
+
+	public void setDate_commande1(Date date_commande) {
+		this.date_commande = date_commande;
+	}
+	public void setDate_commande2(String date_commande) {
+		this.date_commande = java.sql.Date.valueOf(date_commande);
+	}
+	public void setDate_commande3(LocalDate date_commande) {
+		this.date_commande = java.sql.Date.valueOf(date_commande);
+	}
+	
     
     public static void create(Object T){
         try {
             Commande c = (Commande) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
-            Statement requete= laConnexion.createStatement();
-            String query="INSERT INTO Commande VALUES("+c.id_commande+","+  java.sql.Date.valueOf(c.date_commande)+","+c.id_client+")";
-            requete.executeUpdate(query);
-            System.out.println("Commande ajoutee");
+            PreparedStatement requete= laConnexion.prepareStatement("INSERT INTO Commande (id_commande, date_commande,id_client) values (?,?,?)", java.sql.Statement.RETURN_GENERATED_KEYS);
+            requete.setInt(1,c.getId());
+            requete.setDate(2, c.getDate_commande());
+			requete.setInt(3, c.getId_client());
+			requete.executeUpdate();
+			ResultSet res = requete.getGeneratedKeys();
+			if(res.next()) {
+				int cle = res.getInt(1);
+				c.setId(cle);	
+			}
+			laConnexion.close();
+			requete.close();
+			res.close();
+            
         } catch(SQLException sqle){
             System.out.println("Probleme select:" +sqle.getMessage());
-        }            
+        }          
     }
 
     public static void delete(Object T){

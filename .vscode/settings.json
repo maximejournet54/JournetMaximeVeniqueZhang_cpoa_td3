@@ -1,0 +1,13 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar",
+            "j:\\cours\\S3\\CPOA\\td\\mysql-connector-java-8.0.21.jar",
+            "mysql-connector-java-8.0.21.jar",
+            "h:\\téléchargements\\mysql-connector-java-8.0.21.jar"
+        ],
+        "exclude": [
+            "e:\\cours\\S3\\CPOA\\td\\mysql-connector-java-8.0.21.jar"
+        ]
+    }
+}

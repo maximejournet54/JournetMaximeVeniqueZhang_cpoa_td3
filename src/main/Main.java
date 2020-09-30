@@ -13,6 +13,8 @@ import pojo.Commande;
 import pojo.LigneCommande;
 import pojo.Produit;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
@@ -146,10 +148,12 @@ public class Main {
                 id_commande=sc.nextInt();
                 System.out.println("Saisir date en format JJ/MM/AAAA");
                 date_commande=sc.next();
+                DateTimeFormatter formatage = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			    LocalDate dateDebut = LocalDate.parse(date_commande, formatage);
                 System.out.println("Saisir id_client");
                 id_client=sc.nextInt();
                 MYSQLCommandeDAO test=new MYSQLCommandeDAO();
-                if(!test.create(new Commande(id_commande,date_commande,id_client))){
+                if(!test.create(new Commande(id_commande,dateDebut,id_client))){
                     System.out.println("creation impossible");
                 }
                 else
