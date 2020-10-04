@@ -22,10 +22,10 @@ public class ListeMemoireCategorieDAO extends MYSQLCategorieDAO {
 	}
 
 	public boolean create(Categorie objet) {
-		objet.setId(3);
+		objet.setId_categorie(3);
 		// Ne fonctionne que si l'objet métier est bien fait...
 		while (this.donnees.contains(objet)) {
-			objet.setId(objet.getId() + 1);
+			objet.setId_categorie(objet.getId_categorie() + 1);
 		}
 		boolean ok = this.donnees.add(objet);
 		return ok;

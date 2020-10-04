@@ -23,10 +23,10 @@ public class ListeMemoireCommandeDAO extends MYSQLCommandeDAO {
 	}
 
 	public boolean create(Commande objet) {
-		objet.setId(3);
+		objet.setId_commande(3);
 		// Ne fonctionne que si l'objet métier est bien fait...
 		while (this.donnees.contains(objet)) {
-			objet.setId(objet.getId() + 1);
+			objet.setId_commande(objet.getId_commande() + 1);
 		}
 		boolean ok = this.donnees.add(objet);
 		return ok;

@@ -23,10 +23,10 @@ public class ListeMemoireClientDAO extends MYSQLClientDAO{
 	}
 
 	public boolean create(Client objet) {
-		objet.setId(3);
+		objet.setId_client(3);
 		// Ne fonctionne que si l'objet métier est bien fait...
 		while (this.donnees.contains(objet)) {
-			objet.setId(objet.getId() + 1);
+			objet.setId_client(objet.getId_client() + 1);
 		}
 		boolean ok = this.donnees.add(objet);
 		return ok;

@@ -22,12 +22,12 @@ public class ListeMemoireLigneCommandeDAO extends MYSQLLigneCommandeDAO{
 
 	@SuppressWarnings("unlikely-arg-type")
 	public boolean create(LigneCommande objet) {
-		objet.setId(3);
+		objet.setId_commande(3);
 		while (this.donnees.entrySet().contains(objet)) {
-			objet.setId(objet.getId() + 1);
+			objet.setId_commande(objet.getId_commande() + 1);
 		}
 		try {
-			this.donnees.put(objet.getId(),objet);
+			this.donnees.put(objet.getId_commande(),objet);
 				return true;
 		} catch (Exception e) {
 			return false;
@@ -35,7 +35,7 @@ public class ListeMemoireLigneCommandeDAO extends MYSQLLigneCommandeDAO{
 	}
 
 	public boolean update(LigneCommande objet) {
-		int idx = objet.getId();
+		int idx = objet.getId_commande();
 		if (idx == -1) {
 			throw new IllegalArgumentException("Tentative de modification d'une ligne de commande inexistante");
 		} else {
@@ -47,7 +47,7 @@ public class ListeMemoireLigneCommandeDAO extends MYSQLLigneCommandeDAO{
 	public boolean delete(LigneCommande objet) {
 		LigneCommande supprime;
 		// Ne fonctionne que si l'objet métier est bien fait...
-		int idx = objet.getId();
+		int idx = objet.getId_commande();
 		if (idx == -1) {
 			throw new IllegalArgumentException("Tentative de suppression d'une ligne de commande inexistante");
 		} else {

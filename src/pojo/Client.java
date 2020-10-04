@@ -9,28 +9,117 @@ public class Client {
     int id_client, num, cp;
 
     public Client(int id_client, String nom, String prenom, String identifiant, String mdp, int num, String voie, int cp, String ville, String pays) {
-        this.id_client = id_client;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.identifiant = identifiant;
-        this.mdp = mdp;
-        this.num = num;
-        this.voie = voie;
-        this.cp = cp;
-        this.ville = ville;
-        this.pays = pays;
+        this.setId_client(id_client);
+		this.setNom(nom);
+		this.setPrenom(prenom);
+		this.setIdentifiant(identifiant);
+		this.setMdp(mdp);
+		this.setRue(num);
+		this.setVoie(voie);
+		this.setCp(cp);
+		this.setVille(ville);
+		this.setPays(pays);
     }
     
     public Client(int id_client) {
     	this.id_client=id_client;
     }
 
-    public void setId(int id_client) {
+    public int getId_client() {
+		return id_client;
+	}
+
+    public void setId_client(int id_client) {
         this.id_client=id_client;
 	}
 
-	public int getId() {
-		return id_client;
+	public String getNom() {
+		return nom;
+	}
+
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+
+	public String getPrenom() {
+		return prenom;
+	}
+
+
+	public void setPrenom(String prenom) {
+		this.prenom = prenom;
+	}
+
+
+	public String getIdentifiant() {
+		return identifiant;
+	}
+
+
+	public void setIdentifiant(String identifiant) {
+		this.identifiant = identifiant;
+	}
+
+
+	public String getMdp() {
+		return mdp;
+	}
+
+
+	public void setMdp(String mdp) {
+		this.mdp = mdp;
+	}
+
+
+	public int getRue() {
+		return num;
+	}
+
+
+	public void setRue(int num) {
+		this.num = num;
+	}
+
+
+	public String getVoie() {
+		return voie;
+	}
+
+
+	public void setVoie(String voie) {
+		this.voie = voie;
+	}
+
+
+	public int getCp() {
+		return cp;
+	}
+
+
+	public void setCp(int cp) {
+		this.cp = cp;
+	}
+
+
+	public String getVille() {
+		return ville;
+	}
+
+
+	public void setVille(String ville) {
+		this.ville = ville;
+	}
+
+
+	public String getPays() {
+		return pays;
+	}
+
+
+	public void setPays(String pays) {
+		this.pays = pays;
 	}
 
     public static void create(Object T){

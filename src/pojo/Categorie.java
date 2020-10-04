@@ -8,26 +8,49 @@ import java.sql.Statement;
 import connexion.ConnexionMYSQL;
 
 public class Categorie {
-    private int id;
+    private int id_categorie;
     private String visuel;
     private String titre;
 
-    public Categorie(int id, String visuel, String titre) {
-        this.id = id;
+    public Categorie(int id_categorie, String visuel, String titre) {
+        this.id_categorie = id_categorie;
         this.visuel = visuel;
         this.titre = titre;
     }
     
-    public Categorie(int id) {
-    	this.setId(id);
+    public Categorie(int id_categorie) {
+    	this.setId_categorie(id_categorie);
     }
 
-    public void setId(int id) {
-        this.id=id;
+	public int getId_categorie() {
+		return id_categorie;
+    }
+    
+    public void setId_categorie(int id_categorie) {
+        this.id_categorie=id_categorie;
+    }
+    
+    public String getTitre()
+	{
+		return this.titre;
 	}
-
-	public int getId() {
-		return id;
+	public void setTitre(String titre)
+	{   
+		if(titre==null|| titre.trim().length()==0)
+		{
+			throw new IllegalArgumentException("Titre de la categorie!");
+		}
+		this.titre=titre;
+    }
+    
+    public String getVisuel()
+	{
+		return this.visuel;
+    }
+    
+	public void setVisuel(String visuel)
+	{
+		this.visuel=visuel;
 	}
 
     public static void create(Object T){
@@ -36,7 +59,7 @@ public class Categorie {
             Categorie c=(Categorie) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
             Statement requete= laConnexion.createStatement();
-            String query="INSERT INTO Categorie VALUES("+c.id+",'"+c.visuel+"', '"+c.titre+"')";
+            String query="INSERT INTO Categorie VALUES("+c.id_categorie+",'"+c.visuel+"', '"+c.titre+"')";
             requete.executeUpdate(query);
             System.out.println("Categorie ajoutee");
         } catch(SQLException sqle){
@@ -49,7 +72,7 @@ public class Categorie {
             Categorie c=(Categorie) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
             Statement requete= laConnexion.createStatement();
-            String query="delete from Categorie where id_categorie="+c.id;
+            String query="delete from Categorie where id_categorie="+c.id_categorie;
             requete.executeUpdate(query);
             System.out.println("categorie supprimee");
         } catch(SQLException sqle){
@@ -62,7 +85,7 @@ public class Categorie {
             Categorie c=(Categorie) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
             Statement requete= laConnexion.createStatement();
-            String query="update from Categorie where id_categorie ="+c.id;
+            String query="update from Categorie where id_categorie ="+c.id_categorie;
             requete.executeUpdate(query);
             System.out.println("Categorie mise a jour");
         } catch(SQLException sqle){

@@ -7,6 +7,7 @@ import pojo.LigneCommande;
 import pojo.Produit;
 
 public class MYSQLFactoryDAO extends DAOFactory{
+
     public DAO<Commande> getCommandeDAO() {
         return ListeMemoireCommandeDAO.getInstance();
     }

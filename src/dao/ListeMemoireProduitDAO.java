@@ -23,10 +23,10 @@ public class ListeMemoireProduitDAO extends MYSQLProduitDAO {
 	}
 
 	public boolean create(Produit objet) {
-		objet.setId(3);
+		objet.setId_produit(3);
 		// Ne fonctionne que si l'objet métier est bien fait...
 		while (this.donnees.contains(objet)) {
-			objet.setId(objet.getId() + 1);
+			objet.setId_produit(objet.getId_produit() + 1);
 		}
 		boolean ok = this.donnees.add(objet);
 		return ok;
