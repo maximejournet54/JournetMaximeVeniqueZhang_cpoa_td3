@@ -19,7 +19,7 @@ import dao.ListeMemoireClientDAO;
 
 import pojo.Client;
 
-class ListeMemoireClientDAOtest {
+public class ListeMemoireClientDAOtest {
 
 	private Client c;
 
@@ -57,15 +57,15 @@ class ListeMemoireClientDAOtest {
 		Client c3 = ((DAOFactory) DAOFactory.getDAOFactory(Persistance.LISTE_MEMOIRE)).getClientDAO().getById(c2.getId_client());
 		
 		//assertEquals(5,c.getId_client());
-		assertEquals("nom",c.getNom());
-		assertEquals("prenom",c.getPrenom());
-		assertEquals("identifiant",c.getIdentifiant());
-		assertEquals("mdp",c.getMdp());
+		assertEquals("nom",c3.getNom());
+		assertEquals("prenom",c3.getPrenom());
+		assertEquals("identifiant",c3.getIdentifiant());
+		assertEquals("mdp",c3.getMdp());
 		assertEquals(5,c.getRue());
-		assertEquals("voie",c.getVoie());
-		assertEquals(57000,c.getCp());
-		assertEquals("ville",c.getVille());
-		assertEquals("pays",c.getPays());
+		assertEquals("voie",c3.getVoie());
+		assertEquals(57000,c3.getCp());
+		assertEquals("ville",c3.getVille());
+		assertEquals("pays",c3.getPays());
 	}
 
 	@Test

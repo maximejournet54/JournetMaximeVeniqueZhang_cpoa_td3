@@ -19,7 +19,7 @@ import dao.ListeMemoireCommandeDAO;
 
 import pojo.Commande;
 
-class ListeMemoireCommandeDAOtest {
+public class ListeMemoireCommandeDAOtest {
 
 	private Commande c;
 

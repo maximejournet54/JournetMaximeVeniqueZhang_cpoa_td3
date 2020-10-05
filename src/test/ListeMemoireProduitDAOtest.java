@@ -19,7 +19,7 @@ import dao.ListeMemoireProduitDAO;
 
 import pojo.Produit;
 
-class ListeMemoireProduitDAOtest {
+public class ListeMemoireProduitDAOtest {
 	private Produit p;
 
 	@Before

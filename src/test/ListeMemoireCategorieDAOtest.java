@@ -18,7 +18,7 @@ import dao.DAOFactory;
 import dao.ListeMemoireCategorieDAO;
 
 import pojo.Categorie;
-class ListeMemoireCategorieDAOtest {
+public class ListeMemoireCategorieDAOtest {
 	private Categorie c;
 
 	@Before

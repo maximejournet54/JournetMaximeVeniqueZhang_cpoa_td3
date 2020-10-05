@@ -45,10 +45,11 @@ public class MYSQLLigneCommandeDAO implements DAO<LigneCommande> {
             Statement requete = laConnexion.createStatement();
             ResultSet res = requete.executeQuery("select * from LigneCommande where id_commande ="+id_commande);
             while (res.next()) {
+                int id =res.getInt("id_commande");
                 int id_produit =res.getInt("id_produit");
                 int quantite =res.getInt("quantite");
                 double tarif_unitaire =res.getDouble("tarif_unitaire");
-                return new LigneCommande(id_commande, id_produit, quantite, tarif_unitaire);
+                return new LigneCommande(id, id_produit, quantite, tarif_unitaire);
             }
             if (res != null)
                 res.close();

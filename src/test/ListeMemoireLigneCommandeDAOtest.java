@@ -19,7 +19,7 @@ import dao.ListeMemoireLigneCommandeDAO;
 
 import pojo.LigneCommande;
 
-class ListeMemoireLigneCommandeDAOtest {
+public class ListeMemoireLigneCommandeDAOtest {
 	
 	private LigneCommande c;
 
@@ -82,7 +82,7 @@ class ListeMemoireLigneCommandeDAOtest {
 		try {
 			((DAOFactory) DAOFactory.getDAOFactory(Persistance.LISTE_MEMOIRE)).getLigneCommandeDAO().getById(c.getId_commande());
 		} catch(Exception e) {
-				fail("Erreur lors de la récupération");
+				fail("Erreur lors de la recuperation");
 			}
 	}
 

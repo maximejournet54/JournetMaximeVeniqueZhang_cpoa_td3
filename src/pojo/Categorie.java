@@ -12,7 +12,7 @@ public class Categorie {
     private String visuel;
     private String titre;
 
-    public Categorie(int id_categorie, String visuel, String titre) {
+    public Categorie(int id_categorie, String titre, String visuel ) {
         this.id_categorie = id_categorie;
         this.visuel = visuel;
         this.titre = titre;
@@ -59,7 +59,7 @@ public class Categorie {
             Categorie c=(Categorie) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
             Statement requete= laConnexion.createStatement();
-            String query="INSERT INTO Categorie VALUES("+c.id_categorie+",'"+c.visuel+"', '"+c.titre+"')";
+            String query="INSERT INTO Categorie VALUES("+c.id_categorie+",'"+c.titre+"', '"+c.visuel+"')";
             requete.executeUpdate(query);
             System.out.println("Categorie ajoutee");
         } catch(SQLException sqle){

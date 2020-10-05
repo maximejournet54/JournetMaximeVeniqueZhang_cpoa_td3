@@ -127,7 +127,7 @@ public class Client {
             Client c = (Client) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
             Statement requete= laConnexion.createStatement();
-            String query="INSERT INTO Client VALUES("+c.id_client+","+c.nom+","+c.prenom+","+c.mdp+","+c.num+","+c.voie+","+c.cp+","+c.ville+","+c.pays+")";
+            String query="INSERT INTO Client VALUES("+c.id_client+","+c.nom+","+c.prenom+","+c.identifiant+","+c.mdp+","+c.num+","+c.voie+","+c.cp+","+c.ville+","+c.pays+")";
             requete.executeUpdate(query);
             System.out.println("Client ajoute");
         } catch(SQLException sqle){

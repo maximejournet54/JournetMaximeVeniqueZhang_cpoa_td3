@@ -68,7 +68,7 @@ public class Commande {
         try {
             Commande c = (Commande) T;
             Connection laConnexion = ConnexionMYSQL.creeConnexion();
-            PreparedStatement requete= laConnexion.prepareStatement("INSERT INTO Commande (id_commande, date_commande,id_client) values (?,?,?)", java.sql.Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement requete= laConnexion.prepareStatement("INSERT INTO Commande (id_commande, date_commande, id_client) values (?,?,?)", java.sql.Statement.RETURN_GENERATED_KEYS);
             requete.setInt(1,c.getId_commande());
             requete.setDate(2, c.getDate_commande());
 			requete.setInt(3, c.getId_client());
