@@ -63,6 +63,15 @@ public class MYSQLLigneCommandeDAO implements DAO<LigneCommande> {
         }
         return null;
     }
+
+    private static MYSQLLigneCommandeDAO instance;
+    public static MYSQLLigneCommandeDAO getInstance() {
+		if (instance==null) {
+			instance = new MYSQLLigneCommandeDAO();
+		}
+		return instance;
+	}
+
 }
     
 

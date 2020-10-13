@@ -68,4 +68,13 @@ public class MYSQLClientDAO implements DAO<Client>{
         }
         return null;
     }
+
+    private static MYSQLClientDAO instance;
+    public static MYSQLClientDAO getInstance() {
+		if (instance==null) {
+			instance = new MYSQLClientDAO();
+		}
+	return instance;
+	}
+
 }

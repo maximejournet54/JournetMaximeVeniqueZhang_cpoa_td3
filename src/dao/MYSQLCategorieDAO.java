@@ -63,4 +63,12 @@ public class MYSQLCategorieDAO implements DAO<Categorie>{
         }
         return null;
     }
+
+    private static MYSQLCategorieDAO instance;
+	public static MYSQLCategorieDAO getInstance() {
+		if (instance==null) {
+			instance = new MYSQLCategorieDAO();
+		}
+		return instance;
+	}
 }

@@ -1,107 +1,98 @@
 package test;
 
-import java.sql.*;
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.InvalidPropertiesFormatException;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import connexion.ConnexionMYSQL;
-import dao.MYSQLProduitDAO;
+import pojo.Categorie;
 import pojo.Produit;
+import dao.MYSQLProduitDAO;
+import dao.DAOFactory;
+import connexion.Persistance;
 
 public class MYSQLProduitDAOtest {
-	private static MYSQLProduitDAO instance;
-
+	private Produit p;
+    
+    @BeforeEach
+    public void Setup() throws InvalidPropertiesFormatException, SQLException, IOException {
+    	Categorie cat=new Categorie(3,"Watch","watch.png");
+    	p=new Produit(1, "aaa", "222xx",(double) 1.0,"xxx.png",cat);
+		MYSQLProduitDAO.getInstance().create(p);
+    }
+    
+    @AfterEach
+    public void tearDown() throws InvalidPropertiesFormatException, SQLException, IOException {
+	MYSQLProduitDAO.getInstance().delete(p);
+    }
+    
 	@Test
-	public Produit getById(int id_produit) throws SQLException {
-		Produit produit = null;
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req =cnx.prepareStatement("select * from Produit where id_produit = ?");
-		req.setInt(1, id_produit);	
-		ResultSet res = req.executeQuery();
-		while (res.next()) {
-			produit= new Produit(id_produit, res.getString(2), res.getString(3), res.getFloat(4), res.getString(5), res.getInt(6));
-		}
-		cnx.close();
-		req.close();
-		res.close();
-		return produit;
-	}
-	
-	@Test
-	public boolean create(Produit p) throws  SQLException{
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = cnx.prepareStatement("INSERT INTO Produit (id_produit,nom,description,tarif,visuel,id_categorie) values (?,?,?,?,?,?)", java.sql.Statement.RETURN_GENERATED_KEYS);
-		req.setString(1, p.getNom());
-		req.setString(2, p.getDescription());
-		req.setDouble(3, p.getTarif());
-		req.setString(4,p.getVisuel());
-		req.setInt(5, p.getId_categorie());
-		int nbLignes = req.executeUpdate();
-		ResultSet res = req.getGeneratedKeys();
-		int clef;
-		if(res.next()) {
-			clef = res.getInt(1);
-			p.setId_produit(clef);		
-		}
-		cnx.close();
-		req.close();
-		res.close();
-		return nbLignes==1;
-		}
-
-	@Test
-	public boolean update(Produit p) throws SQLException {
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = cnx.prepareStatement("update Produit set id_produit=?, nom=?, description=?, tarif=?, visuel = ?, id_categorie=?  where id_produit=?");
-		req.setInt(1, p.getId_produit());
-		req.setString(2,p.getNom());
-		req.setString(3, p.getDescription());
-		req.setDouble(4, p.getTarif());
-		req.setString(5,p.getVisuel());
-		req.setInt(6, p.getId_categorie());
-		int nbLignes = req.executeUpdate();
-		cnx.close();
-		req.close();	
-	return nbLignes==1;
+	public void testSelectExiste() throws Exception {
+	int id=p.getId_produit();
+	Produit cBdd=MYSQLProduitDAO.getInstance().getById(id);
+	assertNotNull(cBdd);
 	}
 
 	@Test
-	public boolean delete(Produit p) throws SQLException{	
-		try {
-			Connection cnx = ConnexionMYSQL.creeConnexion();
-			PreparedStatement req = cnx.prepareStatement("delete from Produit where id_produit=?");
-			req.setInt(1,p.getId_produit());
-			int nbLignes = req.executeUpdate();
-			cnx.close();
-			req.close();
-			return nbLignes==1;
+	public void testGetbyid() throws Exception {
+	    try {
+		DAOFactory.getDAOFactory(Persistance.MYSQL).getProduitDAO().getById(p.getId_produit());
 		}catch(Exception e) {
-				return false;
-			}
+	    	fail("erreur de getbyid");
+	    }   
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		Categorie cat=new Categorie(3,"Watch","watch.png");
+		Produit c2 = new Produit(1, "aaa", "222xx",(double) 1.0,"xxx.png",cat);
+		try { 
+			MYSQLProduitDAO.getInstance().create(c2);
+		}catch(Exception e) {
+		    fail("Erreur lors de l'insertion");
+		}
+		assertEquals(p.getNom(),"aaa");
+		assertEquals(p.getDescription(),"222xx");
+		assertEquals(p.getTarif(),1.0,1.0); //utilisation d'un delta car float
+		assertEquals(p.getVisuel(),"xxx.png");
+		assertEquals(p.getCategorie().getId(),3);
+		MYSQLProduitDAO.getInstance().delete(c2);
+	}
+
+	@Test
+	public void testDelete() throws Exception {
+	    
+		Categorie cat=new Categorie(3,"Watch","watch.png");
+		Produit p2 =new Produit(1, "aaa", "222xx",(double) 1.0,"xxx.png",cat);
+	    MYSQLProduitDAO.getInstance().create(p2);
+		//int idd =p2.getIdProduit();
+		assertTrue(MYSQLProduitDAO.getInstance().delete(p2));
+		//CMProduit pr = DAOFactory.getDAOFactory(Persistance.MYSQL).getProduitDAO().getById(idd);
+		//assertNull(p2);
+		assertFalse(MYSQLProduitDAO.getInstance().delete(p2));	
 	}
 	
 	@Test
-	public static MYSQLProduitDAO getInstance() {
-		if (instance==null) {
-			instance = new MYSQLProduitDAO();
-		}
-		return instance;
-	}
-	
-	@Test
-	public ArrayList<Produit> findAll() throws Exception {
-		ArrayList<Produit> produ = new ArrayList<Produit>();
-		
-		Connection MaConnection = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = MaConnection.prepareStatement("select * from Produit ");
-		ResultSet res = req.executeQuery();
-		while (res.next()) {
-			produ.add(new Produit(res.getInt("id_produit"), res.getString("nom"), res.getString("description"),res.getDouble("tarif"),res.getString("visuel"),res.getInt("id_categorie")));	
-		}
-		req.close();
-		res.close();
-		return produ;
+	public void testUpdate() throws Exception {
+		Categorie cat=new Categorie(3,"Watch","watch.png");
+		Produit p2= new Produit(p.getId_produit(),"bbb","333zz",(double)2.0,"yyy.png",cat);
+		DAOFactory.getDAOFactory(Persistance.MYSQL).getProduitDAO().update(p2);
+		//Produit p3 = DAOFactory.getDAOFactory(Persistance.MYSQL).getProduitDAO().getById(p2.getId_produit());
+		assertEquals("bbb", p2.getNom());
+		assertEquals("333zz", p2.getDescription());
+		assertEquals((float)1,0, p2.getTarif());
+		assertEquals("yyy.png", p2.getVisuel());
+		assertEquals(3, p2.getCategorie().getId());
 	}
 
 }

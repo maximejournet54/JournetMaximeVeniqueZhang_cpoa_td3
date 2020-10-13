@@ -12,6 +12,11 @@ public class Categorie {
     private String visuel;
     private String titre;
 
+    public Categorie (String titre,String visuel)
+	{
+		this(-1,titre,visuel);
+	}
+
     public Categorie(int id_categorie, String titre, String visuel ) {
         this.id_categorie = id_categorie;
         this.visuel = visuel;
@@ -36,10 +41,6 @@ public class Categorie {
 	}
 	public void setTitre(String titre)
 	{   
-		if(titre==null|| titre.trim().length()==0)
-		{
-			throw new IllegalArgumentException("Titre de la categorie!");
-		}
 		this.titre=titre;
     }
     

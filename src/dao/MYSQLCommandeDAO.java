@@ -65,4 +65,12 @@ public class MYSQLCommandeDAO implements DAO<Commande>{
         }
         return null;
     }
+
+    private static MYSQLCommandeDAO instance;
+    public static MYSQLCommandeDAO getInstance() {
+		if (instance==null) {
+			instance = new MYSQLCommandeDAO();
+		}
+		return instance;
+	}
 }

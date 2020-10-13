@@ -7,8 +7,10 @@ import java.time.LocalDate;
 
 
 public class Commande {
-    private int id_commande,id_client;
+    private int id_commande;
     private Date date_commande;
+    private Client id_client;
+
 	public Commande(int id_commande, String date_commande, int id_client) {
 		this.setId_commande(id_commande);
 		this.setDate_commande2(date_commande);
@@ -29,6 +31,12 @@ public class Commande {
 		this.setId_commande(id_commande);
 		this.setDate_commande3(date_commande);
 		this.setId_client(id_client);
+    }
+    
+    public Commande(String dateCommande,Client  id_client) {
+	
+		this.setDate_commande2(dateCommande);
+		this.setIdClient(idclient);	
 	}
     
     //getters et setters

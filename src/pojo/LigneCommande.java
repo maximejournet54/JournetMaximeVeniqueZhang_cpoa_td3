@@ -9,6 +9,24 @@ import connexion.ConnexionMYSQL;
 public class LigneCommande {
     private int id_commande, id_produit, quantite;	
     private double tarif_unitaire;
+    private Commande c;
+    private Produit p;
+
+    public LigneCommande(int id_commande) {
+		this.setId_commande(id_commande);
+    }
+
+    public LigneCommande(Commande c,Produit p) {
+		this.setCommande(c);
+		this.setProduit(p);
+	}
+      
+    public LigneCommande(Commande c, Produit p, int quantite) {
+		this.setCommande(c);
+		this.setProduit(p);
+		this.setQuantite(quantite);
+    }
+    
     public LigneCommande(int id_commande, int id_produit, int quantite, double tarif_unitaire){
         this.id_commande=id_commande;
         this.id_produit=id_produit;
@@ -19,6 +37,20 @@ public class LigneCommande {
     public LigneCommande(int id_commande, int id_produit) {
 		this.id_commande=id_commande;
 		this.id_produit=id_produit;
+	}
+
+    public Commande getCommande() {
+		return c;
+	}
+	public void setCommande(Commande c) {
+		this.c=c;
+	}
+	
+	public Produit getProduit() {
+		return p;
+	}
+	public void setProduit(Produit p) {
+		this.p=p;
 	}
 
     public int getId_commande() {

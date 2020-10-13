@@ -5,13 +5,16 @@ import java.sql.*;
 import connexion.ConnexionMYSQL;
 
 public class Produit {
-    private int id_produit;
-    private String nom;
-    private String description;
+    private int id_produit,id_categorie;
+    private String nom,description,visuel;
     private double tarif;
-    private String visuel;
-    private int id_categorie;
+    private Categorie c;
+
  
+    public Produit(String nom, String description, double tarif, String visuel, Categorie c ){
+      this(-1,nom,description,tarif,visuel,c);
+    }
+
     public Produit(int id_produit, String nom, String description, double tarif, String visuel, int id_categorie) {
 		this.id_produit = id_produit;
 		this.nom = nom;

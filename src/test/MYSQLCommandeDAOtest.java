@@ -1,100 +1,86 @@
 package test;
 
-import java.sql.*;
-import java.util.ArrayList;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.InvalidPropertiesFormatException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import connexion.ConnexionMYSQL;
-import dao.MYSQLCommandeDAO;
+import pojo.Client;
 import pojo.Commande;
+import dao.MYSQLClientDAO;
+import dao.MYSQLCommandeDAO;
+import dao.DAOFactory;
+import connexion.Persistance;
 
 public class MYSQLCommandeDAOtest {
-	private static MYSQLCommandeDAO instance;
-	
-	@Test
-	public Commande getById(int id_commande) throws SQLException {
-		Commande commande = null;
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req =cnx.prepareStatement("select * from Commande where id_commande = ?");
-		req.setInt(1, id_commande);	
-		ResultSet res = req.executeQuery();
-		while (res.next()) {
-			commande= new Commande(id_commande,res.getString(2),res.getInt(3));
-		}
-		cnx.close();
-		req.close();
-		res.close();
-		return commande;
-	}
-		
-	@Test
-	public boolean create(Commande c) throws  SQLException{
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = cnx.prepareStatement("INSERT INTO Commande (id_commande,date_commande,id_client) values (?,?,?)", java.sql.Statement.RETURN_GENERATED_KEYS);
-		req.setInt(1, c.getId_commande());
-		req.setDate(2, c.getDate_commande());
-		req.setInt(3, c.getId_client());
-		int nbLignes = req.executeUpdate();
-		ResultSet res = req.getGeneratedKeys();
-		int clef;
-		if(res.next()) {
-			clef = res.getInt(1);
-			c.setId_commande(clef);		
-		}
-		cnx.close();
-		req.close();
-		res.close();
-		return nbLignes==1;
-		}
+	private Commande c;
+	private Client client;   
 
+    @BeforeEach
+    public void Setup() throws InvalidPropertiesFormatException, SQLException, IOException {
+		client=new Client("Jack","Ma");
+		c=new Commande("2020-01-01" ,client);
+		MYSQLCommandeDAO.getInstance().create(c);
+		MYSQLClientDAO.getInstance().create(client);
+    }
+    
+    @AfterEach
+    public void tearDown() throws InvalidPropertiesFormatException, SQLException, IOException {
+		MYSQLCommandeDAO.getInstance().delete(c);
+		MYSQLClientDAO.getInstance().delete(client);
+    }
+    
 	@Test
-	public boolean update(Commande c) throws SQLException {
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = cnx.prepareStatement("update Commande set id_commande=?, date_commande=?, id_client=?");
-		req.setInt(1, c.getId_commande());
-		req.setDate(2, c.getDate_commande());
-		req.setInt(3, c.getId_client());
-		int nbLignes = req.executeUpdate();
-		cnx.close();
-		req.close();	
-	return nbLignes==1;
-	}
-
+	public void testSelectExiste() throws Exception {
+		assertNotNull(c);
+ }
 	@Test
-	public boolean delete(Commande c) throws SQLException{	
-		try {
-			Connection cnx = ConnexionMYSQL.creeConnexion();
-			PreparedStatement req = cnx.prepareStatement("delete from Commande where id_commande=?");
-			req.setInt(1,c.getId_commande());
-			int nbLignes = req.executeUpdate();
-			cnx.close();
-			req.close();
-			return nbLignes==1;
+	public void testGetbyid() throws Exception {
+	    try {
+			DAOFactory.getDAOFactory(Persistance.MYSQL).getCommandeDAO().getById(c.getId());
 		}catch(Exception e) {
-				return false;
-			}
+	    	fail("erreur de getbyid");
+	    }
+	    	
+	}
+
+	@Test
+	public void testCreate() throws Exception {
+		client=new Client("JOURNET","Maxime");
+		 c=new Commande("2020-01-01",client);
+		try {
+	    MYSQLClientDAO.getInstance().create(client);	
+		MYSQLCommandeDAO.getInstance().create(c);
+		}catch(Exception e) {
+		    fail("Erreur lors de l'insertion");
+		}
+		
+		assertEquals(c.getId_client().getNom(),"JOURNET");
+		assertEquals(c.getDate_commande().toString(),"2020-01-01");
+		MYSQLCommandeDAO.getInstance().delete(c);
+		MYSQLClientDAO.getInstance().delete(client);
+	}
+	@Test
+	public void testDelete() throws Exception {
+	    try {
+			MYSQLCommandeDAO.getInstance().delete(c);
+		}catch(Exception e) {
+			fail("L'abonnement n'a pas ete supprimer");
+			}	
 	}
 	
 	@Test
-	public static MYSQLCommandeDAO getInstance() {
-		if (instance==null) {
-			instance = new MYSQLCommandeDAO();
-		}
-		return instance;
-	}
-	
-	@Test
-	public ArrayList<Commande> findAll() throws Exception {
-		ArrayList<Commande> produ = new ArrayList<Commande>();
-		Connection MaConnection = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = MaConnection.prepareStatement("select * from Commande ");
-		ResultSet res = req.executeQuery();
-		while (res.next()) {
-			produ.add(new Commande(res.getInt("id_commande"), res.getDate("date_commande"), res.getInt("id_client")));	
-		}
-		req.close();
-		res.close();
-		return produ;
+	public void testUpdate() throws Exception {
+		client=new Client("JOURNET","Maxime");
+		c=new Commande("2020-01-01",client);
+		DAOFactory.getDAOFactory(Persistance.MYSQL).getCommandeDAO().update(c);
+		assertEquals(c.getId_client().getNom(),"JOURNET");
+		assertEquals(c.getDate_commande().toString(),"2020-01-01");
+		MYSQLCommandeDAO.getInstance().delete(c);
+		MYSQLClientDAO.getInstance().delete(client);
 	}
 }

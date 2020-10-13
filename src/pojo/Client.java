@@ -8,6 +8,10 @@ public class Client {
     String nom, prenom, identifiant ,mdp, voie, ville, pays;
     int id_client, num, cp;
 
+	public Client(String nom,String prenom) {
+		this(-1,nom,prenom);
+	}
+
     public Client(int id_client, String nom, String prenom, String identifiant, String mdp, int num, String voie, int cp, String ville, String pays) {
         this.setId_client(id_client);
 		this.setNom(nom);

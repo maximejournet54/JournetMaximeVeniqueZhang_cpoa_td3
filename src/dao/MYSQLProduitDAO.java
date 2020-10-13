@@ -65,5 +65,14 @@ public class MYSQLProduitDAO implements DAO<Produit>{
         }
         return null;
     }
+
+    private static MYSQLProduitDAO instance;
+    public static MYSQLProduitDAO getInstance() {
+		if (instance==null) {
+			instance = new MYSQLProduitDAO();
+		}
+		return instance;
+	}
+
 }
 

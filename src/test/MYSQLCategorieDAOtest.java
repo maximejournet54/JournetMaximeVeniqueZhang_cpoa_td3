@@ -1,100 +1,92 @@
 package test;
 
-import java.sql.*;
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.InvalidPropertiesFormatException;
+
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import connexion.ConnexionMYSQL;
 import dao.MYSQLCategorieDAO;
+import dao.DAOFactory;
+import connexion.Persistance;
 import pojo.Categorie;
 
 public class MYSQLCategorieDAOtest {
-	private static MYSQLCategorieDAO instance;
+	private Categorie c;
 
-	@Test
-	public Categorie getById(int id_categorie) throws SQLException {
-		Categorie categorie = null;
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req =cnx.prepareStatement("select * from Categorie where id_categorie = ?");
-		req.setInt(1, id_categorie);	
-		ResultSet res = req.executeQuery();
-		while (res.next()) {
-			categorie= new Categorie(id_categorie, res.getString(2), res.getString(3));
-		}
-		cnx.close();
-		req.close();
-		res.close();
-		return categorie;
-	}
-		
-	@Test
-	public boolean create(Categorie c) throws  SQLException{
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = cnx.prepareStatement("INSERT INTO Categorie (id_categorie,titre,visuel,) values (?,?,?)", java.sql.Statement.RETURN_GENERATED_KEYS);
-		req.setInt(1, c.getId_categorie());
-		req.setString(2, c.getTitre());
-		req.setString(3, c.getVisuel());
-		int nbLignes = req.executeUpdate();
-		ResultSet res = req.getGeneratedKeys();
-		int clef;
-		if(res.next()) {
-			clef = res.getInt(1);
-			c.setId_categorie(clef);		
-		}
-		cnx.close();
-		req.close();
-		res.close();
-		return nbLignes==1;
-		}
-
-	@Test
-	public boolean update(Categorie c) throws SQLException {
-		Connection cnx = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = cnx.prepareStatement("update Categorie set id_categorie=?,titre=?,visuel=?");
-		req.setInt(1, c.getId_categorie());
-		req.setString(2, c.getVisuel());
-		req.setString(3, c.getTitre());
-		int nbLignes = req.executeUpdate();
-		cnx.close();
-		req.close();	
-	return nbLignes==1;
+	@BeforeEach
+    public void Setup() throws InvalidPropertiesFormatException, SQLException, IOException {
+		c=new Categorie(1,"aa", "aaa.png");
+		MYSQLCategorieDAO.getInstance().create(c);
+    }
+    
+    @AfterEach
+    public void tearDown() throws InvalidPropertiesFormatException, SQLException, IOException {
+		MYSQLCategorieDAO.getInstance().delete(c);
 	}
 
 	@Test
-	public boolean delete(Categorie c) throws SQLException{	
+	public void testSelectExiste() throws Exception {
+		int id=c.getId_categorie();	
+		Categorie cBdd=MYSQLCategorieDAO.getInstance().getById(id);
+		assertNotNull(cBdd);
+ }
+	
+	@Test
+	public void testGetById() throws Exception {
 		try {
-			Connection cnx = ConnexionMYSQL.creeConnexion();
-			PreparedStatement req = cnx.prepareStatement("delete from Categorie where id_categorie=?");
-			req.setInt(1,c.getId_categorie());
-			int nbLignes = req.executeUpdate();
-			cnx.close();
-			req.close();
-			return nbLignes==1;
-		}catch(Exception e) {
-				return false;
+			DAOFactory.getDAOFactory(Persistance.MYSQL).getCategorieDAO().getById(c.getId_categorie());
+			}catch(Exception e) {
+				fail("erreur de getbyid");
 			}
 	}
-	
-	public static MYSQLCategorieDAO getInstance() {
-		if (instance==null) {
-			instance = new MYSQLCategorieDAO();
-		}
-		return instance;
-	}
-	
-	@Test
-	public ArrayList<Categorie> findAll() throws Exception {
-		ArrayList<Categorie> produ = new ArrayList<Categorie>();
 		
-		Connection MaConnection = ConnexionMYSQL.creeConnexion();
-		PreparedStatement req = MaConnection.prepareStatement("select * from Categorie ");
-		ResultSet res = req.executeQuery();
-		while (res.next()) {
-			produ.add(new Categorie(res.getInt("id_categorie"), res.getString("visuel"), res.getString("titre")));	
-		}
-		req.close();
-		res.close();
-		return produ;
+	@Test
+	public void testCreate() throws Exception {
+	    Categorie c2 = new Categorie(1,"aa", "aaa.png");
+		try {    
+			MYSQLCategorieDAO.getInstance().create(c2);
+			}catch(Exception e) {
+				fail("Erreur lors de l'insertion");
+			}
+			//assertEquals(c.getId(),1);
+			assertEquals(c.getTitre(),"aa");
+			assertEquals(c.getVisuel(),"aaa.png");			
+			MYSQLCategorieDAO.getInstance().delete(c2);
 	}
+
+	@Test
+	public void testDelete() throws Exception {
+	    Categorie c3 =new Categorie(10,"bb","bbb.png");
+	    MYSQLCategorieDAO.getInstance().create(c3);
+	 	int idd =c3.getId_categorie();
+	 	assertTrue(MYSQLCategorieDAO.getInstance().delete(c3));
+	 	Categorie pr = DAOFactory.getDAOFactory(Persistance.MYSQL).getCategorieDAO().getById(idd);
+	 	assertNull(pr);	
+	 	assertFalse(MYSQLCategorieDAO.getInstance().delete(pr));
+		
+	}
+
+	@Test
+	public void testUpdate() throws Exception {
+		Categorie c2= new Categorie(c.getId_categorie(),"bb","bbb.png");
+		DAOFactory.getDAOFactory(Persistance.MYSQL).getCategorieDAO().update(c2);
+		Categorie c3 = DAOFactory.getDAOFactory(Persistance.MYSQL).getCategorieDAO().getById(c2.getId_categorie());
+		assertEquals("bb", c3.getTitre());
+		assertEquals("bbb.png", c3.getVisuel());
+		MYSQLCategorieDAO.getInstance().delete(c2);
+		MYSQLCategorieDAO.getInstance().delete(c3);
+	}
+	
 }
